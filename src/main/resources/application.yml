@@ -1,0 +1,79 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource #指定Druid作为数据源
+    druid:
+      one:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/sboot_one?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: 317105678Aa
+        initial-size: 10
+        max-active: 100 #置最大数据库连接数，设为0为无限制
+        min-idle: 10 #始终保留在池中的最小连接数，如果连接验证失败将缩小至此值
+        max-wait: 60000 #最大等待时间
+        pool-prepared-statements: true #启用游标缓存，这个对数据库的性能提升很大
+        max-pool-prepared-statement-per-connection-size: 20 #要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
+        time-between-eviction-runs-millis: 60000 #指定空闲连接检查、废弃连接清理、空闲连接池大小调整之间的操作时间间隔
+        #Oracle需要打开注释
+        #validation-query: SELECT 1 FROM DUAL  #validationQuery是用来验证数据库连接的查询语句，这个查询语句必须是至少返回一条数据的SELECT语句
+        min-evictable-idle-time-millis: 300000 #指定一个空闲连接最少空闲多久后可被清除
+        test-while-idle: true #对池中空闲的连接是否进行验证，验证失败则回收此连接（默认为false）
+        test-on-borrow: false #当从连接池中取出一个连接时是否进行验证，若验证失败则从池中删除该连接并尝试取出另一个连接
+        test-on-return: false #当一个连接使用完归还到连接池时是否进行验证
+        stat-view-servlet:
+          enabled: true
+          url-pattern: /druid/*
+        filter: #监控统计用的filter:stat日志用的filter:log4j防御sql注入的filter:wall
+          stat:
+            log-slow-sql: true
+            slow-sql-millis: 1000
+            merge-sql: false
+          wall:
+            config:
+              multi-statement-allow: true
+        web-stat-filter:
+          enable: false
+          url-pattern: "/*"
+          exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      two:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/sboot_two?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: 317105678Aa
+        initial-size: 10
+        max-active: 100
+        min-idle: 10
+        max-wait: 60000
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 20
+        time-between-eviction-runs-millis: 60000
+        #Oracle需要打开注释
+        #validation-query: SELECT 1 FROM DUAL
+        min-evictable-idle-time-millis: 300000
+        test-while-idle: true # 对池中空闲的连接是否进行验证，验证失败则回收此连接（默认为false）
+        test-on-borrow: false # 当从连接池中取出一个连接时是否进行验证，若验证失败则从池中删除该连接并尝试取出另一个连接
+        test-on-return: false # 当一个连接使用完归还到连接池时是否进行验证
+        stat-view-servlet:
+          enabled: true
+          url-pattern: /druid/*
+        filter:
+          stat:
+            log-slow-sql: true
+            slow-sql-millis: 1000
+            merge-sql: false
+          wall:
+            config:
+              multi-statement-allow: true
+        web-stat-filter:
+          enable: false
+          url-pattern: "/*"
+          exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+  flyway:
+    enabled: true # 如果启动的时候需要flyway管理sql脚本的话，将enabled设置为true
+    baseline-on-migrate: true  # 如果数据库不是空表，需要设置成 true，否则启动报错
+    clean-on-validation-error: false  # 验证错误时 是否自动清除数据库 高危操作!
+    locations:    # 迁移脚本目录
+      - classpath:db/migration/dev # 配置 SQL-based 的 SQL 脚本在该目录下
+
