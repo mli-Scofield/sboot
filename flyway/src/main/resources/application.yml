@@ -57,10 +57,10 @@ spring:
     clean-on-validation-error: false
     # 迁移脚本目录
     locations:
-      - classpath:db/migration # 配置 SQL-based 的 SQL 脚本在该目录下
+      - classpath:db/migration/prod # 配置 SQL-based 的 SQL 脚本在该目录下
     #  flyway 会在库中创建此名称元数据表，用于记录所有版本演化和状态,同一个库不同项目可能冲突，每个项目一张表来记录
     table: flyway_schema_history_sboot
     # 定义 afterMigrateError.sql 要清理的元数据表表名
     placeholders:
       flyway-table: ${spring.flyway.table}
-    outOfOrder: true
+    outOfOrder: false
