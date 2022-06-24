@@ -1,0 +1,1 @@
+ALTER TABLE sys_role ADD flag7 varchar(255) COMMENT "删除2";
