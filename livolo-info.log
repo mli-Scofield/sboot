@@ -1,0 +1,4 @@
+2022-07-13 21:45:17.911 [main] INFO  com.dtc233.eslog.EsLogApplication - Starting EsLogApplication using Java 1.8.0_291 on dtcs-iMac.local with PID 15291 (/Users/dtc/docker/java/sboot/es-log/target/classes started by dtc in /Users/dtc/docker/java/sboot)
+2022-07-13 21:45:17.913 [main] INFO  com.dtc233.eslog.EsLogApplication - No active profile set, falling back to default profiles: default
+2022-07-13 21:45:19.862 [main] INFO  com.dtc233.eslog.EsLogApplication - Started EsLogApplication in 2.943 seconds (JVM running for 5.969)
+2022-07-13 21:45:29.971 [http-nio-8080-exec-1] INFO  com.dtc233.eslog.LogController - hahahahhha,11232,33

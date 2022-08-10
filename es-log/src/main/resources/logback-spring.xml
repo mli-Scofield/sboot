@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 属性文件:在properties文件中找到对应的配置项 -->
+    <springProperty scope="context" name="logging.path" source="logging.path"/>
+
+    <!-- 暂时没用到、日志等级也可以使用spring boot配置项   -->
+    <springProperty scope="context" name="logging.level" source="logging.level.com.livolo"/>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <!--        <logger name="org.springboot.sample" level="TRACE"/>-->
+
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+        <!--            <level>INFO</level>-->
+        <!--            <onMatch>ACCEPT</onMatch>-->
+        <!--            <onMismatch>DENY</onMismatch>-->
+        <!--        </filter>-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) --- [%15.15(%thread)] %cyan(%-40.40(%logger{40}))
+                : %msg%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="LOGSTASH-DEV" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <param name="Encoding" value="UTF-8"/>
+        <remoteHost>127.0.0.1</remoteHost>
+        <port>9600</port>
+        <!-- <filter class="com.program.interceptor.ELKFilter"/>-->//引入过滤类
+        <!-- encoder is required -->
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder" >
+            <customFields>{"appname":"ah"}</customFields>
+        </encoder>
+    </appender>
+<!--    logstash dev测试-->
+<!--    <appender name="LOGSTASH-DEV" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--        &lt;!&ndash;可以访问的logstash日志收集端口、发送日志到ELK套件中&ndash;&gt;-->
+<!--        <destination>127.0.0.1:9600</destination>-->
+<!--        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">-->
+
+<!--            <jsonFactoryDecorator class="net.logstash.logback.decorate.CharacterEscapesJsonFactoryDecorator">-->
+<!--                <escape>-->
+<!--                    <targetCharacterCode>10</targetCharacterCode>-->
+<!--                    <escapeSequence>\u2028</escapeSequence>-->
+<!--                </escape>-->
+<!--            </jsonFactoryDecorator>-->
+<!--            <providers>-->
+<!--                <timestamp>-->
+<!--                    <timeZone>UTC</timeZone>-->
+<!--                </timestamp>-->
+<!--                <pattern>-->
+<!--                    <pattern>-->
+<!--                        {-->
+<!--                        "level": "%level",-->
+<!--                        "trace": "%X{X-B3-TraceId:-}",-->
+<!--                        "span": "%X{X-B3-SpanId:-}",-->
+<!--                        "parent": "%X{X-B3-ParentSpanId:-}",-->
+<!--                        "thread": "%thread",-->
+<!--                        "class": "%logger{40} - %M:%L",-->
+<!--                        "message": "%message",-->
+<!--                        "stack_trace": "%exception{10}"-->
+<!--                        }-->
+<!--                    </pattern>-->
+<!--                </pattern>-->
+<!--            </providers>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+    <!-- 其他异常整合-->
+    <appender name="LIVOLO-INFO"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <file>
+            ./livolo-info.log
+        </file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>./livolo-info.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <MaxHistory>7</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 开发、测试环境 -->
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!--    项目总体业务异常-->
+    <logger name="com.dtc233.eslog">
+        <appender-ref ref="LOGSTASH-DEV"/>
+        <appender-ref ref="LIVOLO-INFO"/>
+    </logger>
+</configuration>
