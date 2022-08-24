@@ -24,12 +24,13 @@ public class SimpleCanalClientExample {
     // 创建链接
     CanalConnector connector =
         CanalConnectors.newSingleConnector(
-            new InetSocketAddress(AddressUtils.getHostIp(), 11111), "test", "", "");
+            new InetSocketAddress(AddressUtils.getHostIp(), 11111), "hz", "", "");
     int batchSize = 1000;
     int emptyCount = 0;
     try {
       connector.connect();
-      connector.subscribe(".*\\..*");
+//      connector.subscribe(".*\\..*");
+      connector.subscribe("^bot_livolo_com\\..*$");
       connector.rollback();
       int totalEmptyCount = 120;
       while (emptyCount < totalEmptyCount) {
@@ -77,9 +78,9 @@ public class SimpleCanalClientExample {
       EventType eventType = rowChage.getEventType();
       System.out.println(
           String.format(
-              "================&gt; binlog[%s:%s] , name[%s,%s] , eventType : %s",
+              "================&gt; binlog[%s:%s] %s, name[%s,%s] , eventType : %s",
               entry.getHeader().getLogfileName(),
-              entry.getHeader().getLogfileOffset(),
+              entry.getHeader().getLogfileOffset(), entry.getHeader().getGtid(),
               entry.getHeader().getSchemaName(),
               entry.getHeader().getTableName(),
               eventType));
