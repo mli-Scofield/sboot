@@ -29,8 +29,9 @@ public class SimpleCanalClientExample {
     int emptyCount = 0;
     try {
       connector.connect();
+      connector.subscribe();
 //      connector.subscribe(".*\\..*");
-      connector.subscribe("^bot_livolo_com\\..*$");
+//      connector.subscribe("^bot_livolo_com\\..*$");
       connector.rollback();
       int totalEmptyCount = 120;
       while (emptyCount < totalEmptyCount) {
@@ -78,13 +79,14 @@ public class SimpleCanalClientExample {
       EventType eventType = rowChage.getEventType();
       System.out.println(
           String.format(
-              "================&gt; binlog[%s:%s] %s, name[%s,%s] , eventType : %s",
+              "================&gt; binlog[%s:%s] %s, name[%s,%s] ,%s,%s,eventType : %s",
               entry.getHeader().getLogfileName(),
               entry.getHeader().getLogfileOffset(), entry.getHeader().getGtid(),
               entry.getHeader().getSchemaName(),
               entry.getHeader().getTableName(),
+              entry.getHeader().getServerId(),
+              entry.getHeader().getExecuteTime(),
               eventType));
-
       for (RowData rowData : rowChage.getRowDatasList()) {
         if (eventType == EventType.DELETE) {
           printColumn(rowData.getBeforeColumnsList());
